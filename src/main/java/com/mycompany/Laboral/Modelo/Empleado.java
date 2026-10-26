@@ -1,4 +1,4 @@
-package com.mycompany.Laboral;
+package com.mycompany.Laboral.Modelo;
 
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 

@@ -1,11 +1,13 @@
 package com.mycompany.Laboral.DAO;
 
-import com.mycompany.Laboral.Empleado;
-import com.mycompany.Laboral.Nomina;
+//import com.mycompany.Laboral.;
+import com.mycompany.Laboral.Modelo.*;
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmpleadoDAO {
     Connection conn;
@@ -17,11 +19,9 @@ public class EmpleadoDAO {
     /**
      * Método para dar de alta al empleado
      */
-
     public void altaEmpleado(Empleado e) throws SQLException {
         // Calculamos el sueldo automáticamente usando la clase Nomina
         int sueldoCalculado = Nomina.sueldo(e);
-
 
         // Preparamos las sentencias SQL para insertar en ambas tablas
         String insertEmpleado = "INSERT INTO Empleados (dni, nombre, sexo, categoria, anyos)" +
@@ -29,14 +29,12 @@ public class EmpleadoDAO {
         String insertNomina = "INSERT INTO Nominas (dni, sueldo) " +
                 "VALUES (?, ?) ";
 
-
         boolean autoCommitOriginal = conn.getAutoCommit();
 
         try {
             /**
              * Iniciamos la transacción deshabilitando autocommit
              */
-
             conn.setAutoCommit(false);
 
             // Insertar datos en la tabla Empleados
@@ -62,7 +60,7 @@ public class EmpleadoDAO {
             conn.commit();
             System.out.println("Empleado dado de alta");
 
-            //Llamamos al método creado más abajo para hacer el backup de los ficheros
+            // Llamamos al método creado más abajo para hacer el backup de los ficheros
             hacerBackupFicheros(e);
 
         } catch (SQLException ex) {
@@ -101,10 +99,9 @@ public class EmpleadoDAO {
                     String dni = datos[3].trim();
                     char sexo = datos[4].trim().charAt(0);
 
-
                     try {
                         /**
-                         Creamos el objeto Empleado usando tu constructor: (categoria, anyos, nombre, dni, sexo)
+                         * Creamos el objeto Empleado usando tu constructor: (categoria, anyos, nombre, dni, sexo)
                          */
                         Empleado e = new Empleado(categoria, anyosTrabajados, nombre, dni, sexo);
 
@@ -131,7 +128,6 @@ public class EmpleadoDAO {
     /**
      * Método para hacer backup del fichero empleados.txt
      */
-
     private void hacerBackupFicheros(Empleado e) {
         // Backup de texto en 'empleados.txt' (append = true para añadir al final)
         try (FileWriter fw = new FileWriter("empleados.txt", true);
@@ -144,16 +140,87 @@ public class EmpleadoDAO {
         } catch (IOException ex) {
             System.out.println("Error al realizar el backup en empleados.txt: " + ex.getMessage());
         }
+    }
 
+    // ==========================================
+    // MÉTODOS WEB (Necesarios para Servlets y JSP)
+    // ==========================================
 
+    /**
+     * Método para obtener todos los empleados en una Lista (Opción 1)
+     */
+    public List<Empleado> obtenerTodosLosEmpleados() throws SQLException, DatosNoCorrectosException {
+        List<Empleado> lista = new ArrayList<>();
+        String sql = "SELECT dni, nombre, sexo, categoria, anyos FROM Empleados";
+
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Empleado e = new Empleado(
+                        rs.getInt("categoria"),
+                        rs.getInt("anyos"),
+                        rs.getString("nombre"),
+                        rs.getString("dni"),
+                        rs.getString("sexo").charAt(0)
+                );
+                lista.add(e);
+            }
+        }
+        return lista;
     }
 
     /**
-     * métodos del apartado 5
-     * ke
+     * Método para obtener el salario de un empleado por DNI (Opción 2)
      */
+    public double obtenerSalarioPorDni(String dni) throws SQLException {
+        double sueldo = 0.0;
+        String sql = "SELECT sueldo FROM Nominas WHERE dni = ?";
 
-    // 5.1. Mostrar información de todos los empleados
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    sueldo = rs.getDouble("sueldo");
+                }
+            }
+        }
+        return sueldo;
+    }
+
+    /**
+     * Método para buscar empleados por criterio (Opción 3)
+     */
+    public List<Empleado> buscarEmpleadosPorCriterio(String criterio) throws SQLException, DatosNoCorrectosException {
+        List<Empleado> lista = new ArrayList<>();
+        String sql = "SELECT dni, nombre, sexo, categoria, anyos FROM Empleados WHERE dni LIKE ? OR nombre LIKE ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            String comodin = "%" + criterio + "%";
+            ps.setString(1, comodin);
+            ps.setString(2, comodin);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Empleado e = new Empleado(
+                            rs.getInt("categoria"),
+                            rs.getInt("anyos"),
+                            rs.getString("nombre"),
+                            rs.getString("dni"),
+                            rs.getString("sexo").charAt(0)
+                    );
+                    lista.add(e);
+                }
+            }
+        }
+        return lista;
+    }
+
+    // ==========================================
+    // MÉTODOS DE CONSOLA (Conservados del ejercicio anterior)
+    // ==========================================
+
+    // 5.1. Mostrar información de todos los empleados (Consola)
     public void mostrarEmpleados() throws SQLException {
         String sql = "SELECT nombre, dni, sexo, categoria, anyos FROM Empleados";
         try (Statement st = conn.createStatement();
@@ -170,7 +237,7 @@ public class EmpleadoDAO {
         }
     }
 
-    // 5.2. Mostrar salario de un empleado por DNI
+    // 5.2. Mostrar salario de un empleado por DNI (Consola)
     public void mostrarSalarioEmpleado(String dni) throws SQLException {
         String sql = "SELECT sueldo FROM Nominas WHERE dni = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -228,7 +295,6 @@ public class EmpleadoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     try {
-
                         Empleado e = new Empleado(
                                 rs.getInt("categoria"),
                                 rs.getInt("anyos"),
@@ -292,7 +358,7 @@ public class EmpleadoDAO {
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql);
-             PrintWriter pw = new PrintWriter(new FileWriter("empleados.txt", false))) { // Sobrescribe el backup previo
+             PrintWriter pw = new PrintWriter(new FileWriter("empleados.txt", false))) {
 
             while (rs.next()) {
                 String linea = rs.getInt("categoria") + "," +
