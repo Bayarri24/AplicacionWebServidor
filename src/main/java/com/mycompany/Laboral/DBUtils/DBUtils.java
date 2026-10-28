@@ -1,4 +1,4 @@
-package DBUtils;
+package com.mycompany.Laboral.DBUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

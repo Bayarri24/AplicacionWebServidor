@@ -5,14 +5,18 @@
     <groupId>com.mycompany</groupId>
     <artifactId>NominasPrueba1</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+
+    <!-- 1. CAMBIADO A WAR (Es una aplicación web) -->
+    <packaging>war</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>26</maven.compiler.release>
-        <exec.mainClass>com.mycompany.Laboral.CalculaNominas</exec.mainClass>
     </properties>
+
     <build>
         <plugins>
+            <!-- Plugin para JavaDoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -26,19 +30,40 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- 2. AÑADIDO EL PLUGIN DE TOMCAT CONFIGURADO EN /empresa -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/empresa</path>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
     <dependencies>
+        <!-- Driver de MariaDB -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>2.7.4</version>
         </dependency>
+
+        <!-- Servlet API -->
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 </project>

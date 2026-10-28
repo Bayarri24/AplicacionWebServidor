@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Gestión de Empresa - Menú Principal</title>
-</head>
-<body>
+    <title>Gestión de Empresa</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
     <h1>Sistema de Gestión de Empleados y Nóminas</h1>
     <hr>
     <h3>Menú de Opciones:</h3>

@@ -28,6 +28,23 @@ public class Empleado extends Persona {
         return categoria;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public char getSexo() {
+        return sexo;
+    }
+
+
+
+    public int getAnyosTrabajados() {
+        return anyosTrabajados;
+    }
     /**
      * Validamos que la categoria este entre 1 y 10,
      * si no lo esta lanzamos una excepcion

@@ -1,20 +1,21 @@
 package com.mycompany.Laboral.Controlador;
 
-import DBUtils.DBUtils;
+import com.mycompany.Laboral.DBUtils.DBUtils;
 import com.mycompany.Laboral.DAO.EmpleadoDAO;
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 import com.mycompany.Laboral.Modelo.Empleado;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
 
 @WebServlet("/listarEmpleados")
 public class ListarEmpleadosController extends HttpServlet {
@@ -28,6 +29,7 @@ public class ListarEmpleadosController extends HttpServlet {
 
             // Obtenemos la lista de empleados
             List<Empleado> listaEmpleados = dao.obtenerTodosLosEmpleados();
+
 
             // Adjuntamos la lista al request para enviarla a la vista JSP
             request.setAttribute("empleados", listaEmpleados);
