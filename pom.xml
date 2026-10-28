@@ -6,7 +6,7 @@
     <artifactId>NominasPrueba1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <!-- 1. CAMBIADO A WAR (Es una aplicación web) -->
+
     <packaging>war</packaging>
 
     <properties>
@@ -31,7 +31,7 @@
                 </executions>
             </plugin>
 
-            <!-- 2. AÑADIDO EL PLUGIN DE TOMCAT CONFIGURADO EN /empresa -->
+
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
